@@ -6,8 +6,8 @@ Description:
 ------------
 This is a open source minimal yet powerful responsive web app that aggregates and displays content from multiple RSS feeds in a card-based layout. It supports light/dark themes, infinite scrolling, social sharing, and works across modern devices and screen sizes.
 
-![image](https://github.com/user-attachments/assets/f3d27d62-f929-4760-bb88-dc27ac501985)
-![image](https://github.com/user-attachments/assets/3af9f46e-242d-4b57-9027-e2eca494fc75)
+![Screenshot 2025-07-02 210441](https://github.com/user-attachments/assets/66500b58-21f8-4549-8817-5a8f12e082e7)
+![Screenshot 2025-07-02 210547](https://github.com/user-attachments/assets/492a06d2-f36f-4806-869f-df03400dfe05)
 
 Use Case:
 ---------
@@ -118,7 +118,8 @@ MIT License – Free to use, modify, and distribute with attribution.
 
 Author:
 Developed by Saif Ansari @Saifscode with the help of Neo, my personalized AI from OpenAI
+
 Inspired by the need for a customizable, fast, and beautiful RSS aggregator for my company's website.
 
-This is my first code I have ever written. Hope it is useful to you.
+This is the first code I have ever written. Hope it is useful to you.
 
