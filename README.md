@@ -6,6 +6,9 @@ Description:
 ------------
 This is a minimal yet powerful responsive web app that aggregates and displays content from multiple RSS feeds in a card-based layout. It supports light/dark themes, infinite scrolling, social sharing, and works across modern devices and screen sizes.
 
+![image](https://github.com/user-attachments/assets/f3d27d62-f929-4760-bb88-dc27ac501985)
+![image](https://github.com/user-attachments/assets/3af9f46e-242d-4b57-9027-e2eca494fc75)
+
 Use Case:
 ---------
 Ideal for:
