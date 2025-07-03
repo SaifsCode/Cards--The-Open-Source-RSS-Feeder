@@ -45,7 +45,7 @@ This project is part of a larger mission to build intelligent, modular, and priv
 
 Please follow these conventions:
 
-- **Language**: Python 3.x
+- **Language**: HTML
 - Use `black` or `autopep8` to auto-format your code.
 - Use **docstrings** for functions and classes.
 - Prefer list/dictionary comprehensions for readability.
