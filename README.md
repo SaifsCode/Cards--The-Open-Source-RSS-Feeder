@@ -4,8 +4,8 @@
 
 A minimal yet powerful open source web app that aggregates and displays articles from multiple RSS feeds in a beautiful, responsive card layout. Features automatic thumbnail handling, light/dark theme, infinite scroll ("Show More"), social sharing, and robust feed parsing—no backend or server required. Designed for modern browsers and works on all devices.
 
-![RSS Deck Screenshot](https://github.com/user-attachments/assets/66500b58-21f8-4549-8817-5a8f12e082e7)
-![RSS Deck Dark Mode](https://github.com/user-attachments/assets/492a06d2-f36f-4806-869f-df03400dfe05)
+![Screenshot 2025-07-03 231404](https://github.com/user-attachments/assets/78106b03-24e3-4c3a-a789-80e6ca90ae50)
+![Screenshot 2025-07-03 231454](https://github.com/user-attachments/assets/0a134911-ff75-4698-a8c7-cec2c2dff557)
 
 ---
 
