@@ -1,5 +1,11 @@
 # Cards - Open Source RSS Feeder
 
+[![Awesome](https://awesome.re/badge-flat.svg)](https://awesome.re)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/06c971c8-774f-4d17-945e-991826746006/deploy-status)](https://app.netlify.com/projects/cards-an-open-source-rss-reader/deploys)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/SaifsCode/Cards--The-Open-Source-RSS-Feeder.svg)](https://github.com/SaifsCode/Cards--The-Open-Source-RSS-Feeder/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/SaifsCode/Cards--The-Open-Source-RSS-Feeder.svg)](https://github.com/SaifsCode/Cards--The-Open-Source-RSS-Feeder/network)
+
 ## Overview
 
 A minimal yet powerful open source web app that aggregates and displays articles from multiple RSS feeds in a beautiful, responsive card layout. Features automatic thumbnail handling, light/dark theme, infinite scroll ("Show More"), social sharing, and robust feed parsing—no backend or server required. Designed for modern browsers and works on all devices.
@@ -197,9 +203,9 @@ MIT License — Free to use, modify, and distribute with attribution.
 ## Author
 
 Developed by Saif Ansari [@Saifscode](https://github.com/SaifsCode)  
-With the help of Neo, my personalized AI from OpenAI.
+With the help of Neo, my personalized AI from OpenAI v4.5.
 
-Inspired by the need for a customizable, fast, and beautiful RSS aggregator for my company's website.  
-This was my first code project. Hope you find it useful!
+Inspired by the need for a free, customizable, fast, and beautiful RSS tech news aggregator for my company's website.  
+This was my first code project. Hope you found it useful!
 
 ---
