@@ -117,8 +117,8 @@ Want to see a new feature? Open an [issue](../../issues) using the **Feature Req
 ## 📬 Contact
 
 Maintainer: [@SaifsCode](https://github.com/SaifsCode)  
-Email: cigli.india [@] gmail [.] com  
-Twitter: [@CigliIndia](https://twitter.com/CigliIndia) (optional if active)
+Email: saifscode [@] gmail [.] com  
+Twitter: [@saifsbird](https://x.com/SaifsBird)
 
 ---
 
