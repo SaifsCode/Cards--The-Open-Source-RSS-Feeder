@@ -1,8 +1,8 @@
-# 🤝 Contributing to Free-RSS-Feed-Puller-Multi-Parser
+# 🤝 Contributing to Cards--The-Open-Source-RSS-Feeder
 
-Welcome, and thank you for your interest in contributing to **Free-RSS-Feed-Puller-Multi-Parser**!
+Welcome, and thank you for your interest in contributing to **Cards--The-Open-Source-RSS-Feeder**!
 
-This project is part of a larger mission to build intelligent, modular, and privacy-respecting data tools for the future of the web — and potentially signal intelligence systems like ASIR (All-Spectrum Intelligent Receiver). Contributions of any size, shape, or kind are welcome. Read on to learn how to get involved. 🌍🚀
+This project is part of a larger mission to build intelligent, modular, and privacy-respecting open-source data tools for the future of the web. Contributions of any size, shape, or kind are welcome. Read on to learn how to get involved. 🌍🚀
 
 ---
 
