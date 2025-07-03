@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cards - Open Source RSS Feeder</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gudea:ital,wght@0,400;0,700;1,400&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Masonry.js CDN -->
+  <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
+  <style>
+    body {
+      font-family: 'Gudea', sans-serif;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 20px;
+      color: #2c73b3;
+    }
+    body.dark-mode {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    .dark-mode .feed-card {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+    .dark-mode .feed-date,
+    .dark-mode .share-icons a {
+      color: #aaa;
+    }
+    .dark-mode .tag {
+      background-color: #555;
+    }
+    .toggle-dark {
+      position: fixed;
+      top: 32px;
+      right: 32px;
+      width: 56px;
+      height: 56px;
+      background: #2c73b3;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      cursor: pointer;
+      z-index: 100;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .toggle-dark:hover {
+      background: #1e5c91;
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(44, 115, 179, 0.3);
+    }
+    .toggle-dark i {
+      font-size: 28px;
+    }
+    @media (max-width: 700px) {
+      .toggle-dark {
+        top: 12px;
+        right: 12px;
+        width: 44px;
+        height: 44px;
+        font-size: 15px;
+      }
+      .toggle-dark i {
+        font-size: 20px;
+      }
+    }
+    .feed-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .feed-card {
+      background-color: #f5f5f5;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: block;
+      width: 320px;
+      margin-bottom: 28px;
+      margin-right: 28px;
+      transition: transform 0.2s;
+      cursor: pointer;
+      vertical-align: top;
+    }
+    .feed-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+    .feed-card img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      display: block;
+    }
+    .feed-content {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .feed-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0 0 6px;
+      font-family: 'Gudea', sans-serif;
+    }
+    .feed-date {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    .feed-desc {
+      font-size: 14px;
+      font-weight: 400;
+      font-family: 'Gudea', sans-serif;
+    }
+    .feed-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 10px 15px;
+    }
+    .share-icons {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+    .share-icons a {
+      margin-right: 8px;
+      color: #2c73b3;
+      font-size: 20px;
+      text-decoration: none;
+      transition: color 0.2s, transform 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: transparent;
+      box-sizing: border-box;
+    }
+    .share-icons a:last-child {
+      margin-right: 0;
+    }
+    .share-icons a:hover {
+      color: #fff;
+      background: #2c73b3;
+      transform: scale(1.12);
+    }
+    .load-more {
+      display: block;
+      margin: 30px auto 0;
+      padding: 10px 20px;
+      font-size: 22px;
+      font-family: 'Gudea', sans-serif;
+      color: #2c73b3;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s, color 0.2s;
+    }
+    .load-more:hover {
+      background: #2c73b3;
+      color: #fff;
+    }
+    .scroll-top, .go-top-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: #2c73b3;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 99;
+      display: none;
+    }
+    .scroll-top:hover, .go-top-btn:hover {
+      background-color: #1e5c91;
+    }
+    .tag {
+      font-size: 12px;
+      font-weight: bold;
+      background: #2c73b3;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      display: inline-block;
+      text-transform: uppercase;
+    }
+    .no-posts {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 50px;
+      color: #999;
+    }
+    @media (max-width: 1000px) {
+      .feed-card {
+        width: 100%;
+        margin-right: 0;
+      }
+      .scroll-top, .go-top-btn {
+        right: 10px;
+        bottom: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+      .share-icons a {
+        font-size: 18px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Toggle this flag to show/hide the dark mode icon -->
+  <script>
+    // === TOGGLE DARK MODE ICON ON UI ===
+    // Set to "yes" to show, "no" to hide the dark mode toggle button in the UI
+    const showDarkModeIcon = "yes"; // <--- CHANGE TO "no" TO HIDE THE ICON
+  </script>
+  <button class="toggle-dark" id="toggleDarkBtn" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+    <i class="fas fa-moon"></i>
+  </button>
+  <div class="feed-container" id="feedContainer"></div>
+  <div class="no-posts" id="noPosts" style="display:none;">No posts found from the sources. Please try again later.</div>
+  <button class="load-more" id="loadMore">Show More</button>
+  <button class="go-top-btn" id="goTopBtn" title="Go to top">&#8679;</button>
+  <button class="scroll-top" id="scrollTop" title="Scroll to top">&#8679;</button>
+
+  <script>
+    // Hide/show dark mode icon based on toggle variable
+    if (typeof showDarkModeIcon !== 'undefined' && showDarkModeIcon.toLowerCase() === "no") {
+      var btn = document.getElementById("toggleDarkBtn");
+      if (btn) btn.style.display = "none";
+    }
+
+    const LOAD_MORE_TEXT = "Show More";
+    const LOAD_MORE_DONE_TEXT = "No More Articles";
+    const LOAD_MORE_BATCH = 15;
+
+    // --- WORD FILTERS (BACKEND ONLY) ---
+    // Add words below (lowercase, no spaces unless whole phrase) to block posts containing those words in title or description.
+    // Example: ["cricket", "bitcoin", "elon musk"]
+    const wordFilters = [
+      // Add your blocked words here, e.g.:
+      // "cricket", "bitcoin", "elon musk"
+    ];
+    // ------------------------------------
+
+    function isBadImageUrl(url) {
+      if (!url) return true;
+      url = url.toLowerCase();
+      return (
+        url.endsWith('1x1.gif') ||
+        url.endsWith('1x1.png') ||
+        url.includes('pixel.gif') ||
+        url.includes('spacer.gif') ||
+        url.includes('tracking') ||
+        url.includes('blank.gif')
+      );
+    }
+
+    function getValidImageUrl(item) {
+      let mediaThumb = item.querySelector('media\\:thumbnail');
+      if (mediaThumb) {
+        let url = mediaThumb.getAttribute('url');
+        if (url && !isBadImageUrl(url)) return url;
+      }
+      let mediaContent = item.querySelector('media\\:content');
+      if (mediaContent) {
+        let url = mediaContent.getAttribute('url');
+        let type = mediaContent.getAttribute('type');
+        if (url && (!type || type.startsWith('image')) && !isBadImageUrl(url)) return url;
+      }
+      let enclosure = item.querySelector('enclosure');
+      if (enclosure) {
+        let url = enclosure.getAttribute('url');
+        let type = enclosure.getAttribute('type');
+        if (url && type && type.startsWith('image') && !isBadImageUrl(url)) return url;
+      }
+      let itunesImg = item.querySelector('itunes\\:image');
+      if (itunesImg) {
+        let url = itunesImg.getAttribute('href');
+        if (url && !isBadImageUrl(url)) return url;
+      }
+      let imageTag = item.querySelector('image');
+      if (imageTag) {
+        let url = imageTag.getAttribute('url') || imageTag.getAttribute('href');
+        if (url && !isBadImageUrl(url)) return url;
+      }
+      let contentHtml = item.querySelector('content\\:encoded')?.textContent || "";
+      let matchC = contentHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
+      if (matchC && !isBadImageUrl(matchC[1])) return matchC[1];
+      let descHtml = item.querySelector('description')?.textContent || "";
+      let matchD = descHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
+      if (matchD && !isBadImageUrl(matchD[1])) return matchD[1];
+      return "";
+    }
+
+    function makeAbsolute(url, postLink) {
+      if (!url) return "";
+      if (/^https?:\/\//i.test(url)) return url;
+      try {
+        let a = document.createElement('a');
+        a.href = postLink || "";
+        let origin = a.origin || "";
+        if (url.startsWith("/")) return origin + url;
+        if (postLink) {
+          let postUrl = new URL(postLink, origin);
+          let base = postUrl.href.substring(0, postUrl.href.lastIndexOf("/") + 1);
+          return base + url;
+        }
+        return url;
+      } catch {
+        return url;
+      }
+    }
+
+    // Checks if a post matches any filtered words
+    function isFilteredOut(post) {
+      if (!wordFilters || wordFilters.length === 0) return false;
+      const text = ((post.title || "") + " " + (post.description || "")).toLowerCase();
+      return wordFilters.some(word => word && text.includes(word));
+    }
+
+    const feedUrls = [
+      'https://www.labnol.org/rss.xml',
+      'https://techcrunch.com/feed/',
+      'https://www.sciencedaily.com/rss/top.xml',
+      'https://yourstory.com/feed',
+      'https://fossbytes.com/feed/?x=1',
+      'https://techpp.com/feed/',
+      'https://itechhacks.com/feed/',
+      'https://feeds.feedburner.com/techgyd',
+      'https://www.wired.com/feed/rss',
+      'https://mashable.com/feeds/rss/all',
+      'https://www.cnet.com/rss/news/',
+      'https://www.engadget.com/rss.xml',
+      'https://feeds.feedburner.com/venturebeat/SZYF'
+    ];
+
+    const parsers = [
+      url => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`,
+      url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+      url => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(url)}`,
+      url => `https://feedrapp.info/api/v1/feed?url=${encodeURIComponent(url)}`,
+      url => `https://api.rss2json.io/v1/api.json?rss_url=${encodeURIComponent(url)}`,
+      url => `https://corsproxy.io/?${encodeURIComponent(url)}`
+    ];
+
+    const maxCards = 60;
+    let posts = [];
+    let shown = 0;
+    let msnry = null;
+
+    const container = document.getElementById('feedContainer');
+    const loadBtn = document.getElementById('loadMore');
+    const goTopBtn = document.getElementById('goTopBtn');
+    const scrollTopBtn = document.getElementById('scrollTop');
+    const noPostsMsg = document.getElementById('noPosts');
+
+    async function fetchWithFallback(feedUrl) {
+      for (let buildUrl of parsers) {
+        try {
+          const res = await fetch(buildUrl(feedUrl));
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data && data.items) return data.items;
+          if (data.contents) {
+            try {
+              const json = JSON.parse(data.contents);
+              if (json.items) return json.items;
+            } catch (e) {
+              if (data.contents.trim().startsWith('<?xml')) {
+                const parser = new DOMParser();
+                const xml = parser.parseFromString(data.contents, "application/xml");
+                const items = Array.from(xml.querySelectorAll("item"));
+                const mapped = await Promise.all(items.map(async item => ({
+                  title: item.querySelector("title")?.textContent || "",
+                  link: item.querySelector("link")?.textContent || "",
+                  pubDate: item.querySelector("pubDate")?.textContent || "",
+                  description: item.querySelector("description")?.textContent || "",
+                  thumbnail: makeAbsolute(getValidImageUrl(item), item.querySelector("link")?.textContent || "")
+                })));
+                if (mapped.length) return mapped;
+              }
+            }
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+      return [];
+    }
+
+    async function fetchFeed(feedUrl) {
+      return await fetchWithFallback(feedUrl);
+    }
+
+    async function loadFeeds() {
+      try {
+        const feedPromises = feedUrls.map(url => fetchFeed(url));
+        const allFeeds = await Promise.all(feedPromises);
+        let merged = allFeeds.flat();
+        const seen = new Set();
+        // Filter out posts containing any blocked words
+        posts = merged.filter(item => {
+          const key = item.title.toLowerCase().trim();
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return !isFilteredOut(item);
+        }).sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+        posts = posts.slice(0, maxCards);
+
+        shown = 0;
+        container.innerHTML = '';
+        goTopBtn.style.display = "none";
+        if (posts.length === 0) {
+          noPostsMsg.style.display = 'block';
+          loadBtn.style.display = 'none';
+        } else {
+          noPostsMsg.style.display = 'none';
+          loadBtn.style.display = 'block';
+          loadBtn.disabled = false;
+          loadBtn.textContent = LOAD_MORE_TEXT;
+          showNextBatch(true);
+        }
+      } catch (err) {
+        console.error("Error fetching feeds:", err);
+        noPostsMsg.style.display = 'block';
+        loadBtn.style.display = 'none';
+        goTopBtn.style.display = "none";
+      }
+    }
+
+    function showNextBatch(isFirstLoad = false) {
+      shown = Math.min(shown + LOAD_MORE_BATCH, posts.length);
+      container.innerHTML = '';
+      for (let i = 0; i < shown; ++i) {
+        container.appendChild(createCard(posts[i]));
+      }
+      const images = container.querySelectorAll('img');
+      let loadedCount = 0;
+      if (images.length === 0) {
+        runMasonry();
+      } else {
+        images.forEach(img => {
+          img.onerror = () => { img.remove(); runMasonry(); };
+          if (img.complete) {
+            loadedCount++;
+            if (loadedCount === images.length) runMasonry();
+          } else {
+            img.onload = img.onerror = () => {
+              loadedCount++;
+              if (loadedCount === images.length) runMasonry();
+            };
+          }
+        });
+      }
+      if (shown >= posts.length) {
+        loadBtn.style.display = "none";
+        goTopBtn.style.display = "flex";
+      } else {
+        loadBtn.textContent = LOAD_MORE_TEXT;
+        loadBtn.disabled = false;
+        loadBtn.style.display = "block";
+        goTopBtn.style.display = "none";
+      }
+      if (isFirstLoad) window.scrollTo({ top: 0 });
+    }
+
+    function runMasonry() {
+      if (msnry) msnry.destroy();
+      msnry = new Masonry(container, {
+        itemSelector: '.feed-card',
+        columnWidth: 320,
+        gutter: 28,
+        horizontalOrder: true
+      });
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    function parseRssDate(dateStr) {
+      if (!dateStr) return null;
+      if (/(\d{2}:\d{2}:\d{2})$/.test(dateStr.trim())) {
+        return new Date(dateStr.trim() + " UTC");
+      }
+      return new Date(dateStr);
+    }
+
+    // PATCHED: Removed timeZoneName for iPhone Safari compatibility
+    function niceLocalTime(dateStr) {
+      const date = parseRssDate(dateStr);
+      if (!date || isNaN(date.getTime())) return "";
+      return date.toLocaleString(undefined, {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    }
+
+    function timeAgo(dateStr) {
+      const date = parseRssDate(dateStr);
+      if (!date || isNaN(date.getTime())) return "";
+      const now = new Date();
+      const seconds = Math.floor((now - date) / 1000);
+      if (seconds < 900) return 'just now';
+      if (seconds < 3600) return `${Math.floor(seconds/60)}m ago`;
+      if (seconds < 86400) return `${Math.floor(seconds/3600)}h ago`;
+      if (seconds < 7*86400) return `${Math.floor(seconds/86400)}d ago`;
+      return niceLocalTime(dateStr);
+    }
+
+    function extractSource(url) {
+      try {
+        const hostname = new URL(url).hostname;
+        return hostname.replace('www.', '').split('.')[0];
+      } catch {
+        return 'Source';
+      }
+    }
+
+    function createCard(post) {
+      const card = document.createElement('div');
+      card.className = 'feed-card';
+
+      if (post.thumbnail && !isBadImageUrl(post.thumbnail)) {
+        const img = new window.Image();
+        img.src = post.thumbnail;
+        img.onload = function() {
+          card.insertBefore(img, card.firstChild);
+          runMasonry();
+        };
+      }
+
+      const content = document.createElement('div');
+      content.className = 'feed-content';
+
+      const tag = document.createElement('div');
+      tag.className = 'tag';
+      tag.textContent = extractSource(post.link);
+
+      const title = document.createElement('h3');
+      title.className = 'feed-title';
+      title.textContent = post.title;
+
+      const time = document.createElement('span');
+      time.className = 'feed-date';
+      time.textContent = timeAgo(post.pubDate);
+      time.title = niceLocalTime(post.pubDate);
+
+      const desc = document.createElement('p');
+      desc.className = 'feed-desc';
+      desc.textContent = post.description.replace(/<[^>]*>/g, '').slice(0, 150) + '...';
+
+      const actions = document.createElement('div');
+      actions.className = 'feed-actions';
+
+      const share = document.createElement('div');
+      share.className = 'share-icons';
+      const shareUrl = encodeURIComponent(post.link);
+      const shareTitle = encodeURIComponent(post.title);
+
+      share.innerHTML = `
+        <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" title="Share on Facebook" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+        <a href="https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}" target="_blank" title="Share on X/Twitter" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}" target="_blank" title="Share on LinkedIn" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
+        <a href="https://wa.me/?text=${shareTitle}%20${shareUrl}" target="_blank" title="Share on WhatsApp" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://t.me/share/url?url=${shareUrl}&text=${shareTitle}" target="_blank" title="Share on Telegram" rel="noopener noreferrer"><i class="fab fa-telegram"></i></a>
+        <a href="https://www.instagram.com/direct/new/" target="_blank" title="Share on Instagram (Direct)" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+        <a href="mailto:?subject=${shareTitle}&body=${shareUrl}" target="_blank" title="Share via Email" rel="noopener noreferrer"><i class="fas fa-envelope"></i></a>
+      `;
+
+      share.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+      });
+
+      content.appendChild(tag);
+      content.appendChild(title);
+      content.appendChild(time);
+      content.appendChild(desc);
+      actions.appendChild(share);
+      card.appendChild(content);
+      card.appendChild(actions);
+
+      card.onclick = (e) => {
+        if (!e.target.closest('.share-icons')) {
+          window.open(post.link, '_blank');
+        }
+      };
+
+      return card;
+    }
+
+    loadBtn.addEventListener('click', () => showNextBatch());
+    goTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    window.addEventListener('scroll', () => {
+      scrollTopBtn.style.display = (window.scrollY > 200 && loadBtn.style.display !== "none") ? 'flex' : 'none';
+    });
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    loadFeeds();
+  </script>
+</body>
+</html>
